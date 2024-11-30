@@ -1,0 +1,60 @@
+/* use std::ffi::CString;
+use std::os::raw::c_char; */
+
+/* pub struct SafeString(String);
+
+impl SafeString {
+    pub fn new(s: String) -> Self {
+        SafeString(s)
+    }
+
+    pub fn as_str(&self) -> &str {
+        &self.0
+    }
+}
+
+impl Drop for SafeString {
+    // If using the wrapper type approach
+    fn drop(&mut self) {
+        // Retake ownership and drop the CString
+        if !self.as_cstr_ptr().is_null() {
+            let _ = unsafe { CString::from_raw(self.as_cstr_ptr() as *mut c_char) };
+        }
+    }
+}
+
+impl IntoCStr for SafeString {
+    fn as_cstr_ptr(&self) -> *const c_char {
+        match CString::new(self.as_str()) {
+            Ok(c_string) => c_string.into_raw(),
+            Err(_) => std::ptr::null(),
+        }
+    }
+} */
+
+/* let slider_bounds = Rectangle::new(
+    (d.get_screen_width() as f32 - 300.0) / 2.0,
+    50.0,
+    300.0,
+    30.0,
+);
+
+if d.gui_slider(
+    slider_bounds,
+    SafeString(String::from("")),
+    SafeString(slider_value.to_string()),
+    &mut slider_value,
+    0.0,
+    500.0,
+) {
+    println!("Slider value changed: {}", slider_value);
+}
+
+d.draw_circle(
+    sim.positions[612].get().x as i32,
+    sim.positions[612].get().y as i32,
+    slider_value,
+    Color::new(255, 255, 0, 75),
+); */
+
+/* sim.radius = slider_value; */
