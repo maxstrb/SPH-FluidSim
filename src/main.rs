@@ -2,7 +2,11 @@ use rand::rngs::ThreadRng;
 use raylib::prelude::*;
 
 use rand::Rng;
-use std::{cell::Cell, f32::consts::PI};
+use std::{
+    cell::Cell,
+    f32::consts::PI,
+    time::{Duration, Instant},
+};
 
 const OMEGA: f32 = 1e30;
 
@@ -20,6 +24,8 @@ struct Simulation {
 
     bounds: Vector2,
     gravity: f32,
+
+    volume: f32,
 }
 
 impl Simulation {
@@ -74,6 +80,8 @@ impl Simulation {
 
             bounds,
             gravity,
+
+            volume: (PI * radius.powi(4)) * 0.1666666667,
         }
     }
 
@@ -150,8 +158,7 @@ impl Simulation {
             return 0.;
         }
 
-        let volume = (PI * self.radius.powi(4)) * 0.1666666667;
-        let kernel_value = ((self.radius - distance).powi(2) / volume).clamp(0., OMEGA);
+        let kernel_value = ((self.radius - distance).powi(2) / self.volume).clamp(0., OMEGA);
 
         kernel_value
     }
@@ -302,10 +309,16 @@ fn main() {
         0.5,
         130.,
         0.004,
-        0.85,
+        0.95,
         Vector2::new(WIDTH as f32, HEIGHT as f32),
         0.7,
     );
+
+    let mut average_framerate = 0.;
+    let mut frame_count = 0;
+    let test_time = Duration::from_secs_f32(40.);
+
+    let start_time = Instant::now();
 
     while !rl.window_should_close() {
         let mut d = rl.begin_drawing(&thread);
@@ -330,5 +343,16 @@ fn main() {
         );
 
         d.draw_fps(0, 0);
+
+        average_framerate += d.get_frame_time();
+        frame_count += 1;
+
+        if Instant::now().duration_since(start_time) > test_time {
+            println!(
+                "average framerate: {}",
+                average_framerate / frame_count as f32
+            );
+            break;
+        }
     }
 }
